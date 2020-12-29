@@ -1111,20 +1111,20 @@ void Identificare_comanda(string command, vector<Tabel>& DB)
 		{
 			if (DB[i].GetNume() == numetabel)
 			{
-				for (int j = 0; j < DB[i].vi.size(); j++)
-					if (DB[i].vi[j].GetNume() == numecoloana)
+				for (vector <Coloana_int>::iterator it=DB[i].vi.begin();it!=DB[i].vi.end();++it)
+					if (it->GetNume() == numecoloana)
 					{
-						DB[i].vi[j].~Coloana_int();
+						DB[i].vi.erase(it);
 					}
-				for (int j = 0; j < DB[i].vf.size(); j++)
-					if (DB[i].vf[j].GetNume() == numecoloana)
+				for (vector <Coloana_float>::iterator it = DB[i].vf.begin(); it != DB[i].vf.end(); ++it)
+					if (it->GetNume() == numecoloana)
 					{
-						DB[i].vf[j].~Coloana_float();
+						DB[i].vf.erase(it);
 					}
-				for (int j = 0; j < DB[i].vs.size(); j++)
-					if (DB[i].vs[j].GetNume() == numecoloana)
+				for (vector <Coloana_string>::iterator it = DB[i].vs.begin(); it != DB[i].vs.end(); ++it)
+					if (it->GetNume() == numecoloana)
 					{
-						DB[i].vs[j].~Coloana_string();
+						DB[i].vs.erase(it);
 					}
 			}
 		}
@@ -1150,6 +1150,7 @@ int main()
 	cout << "Introduceti Comanda:";
 	getline(cin, command);
 	Identificare_comanda(command, DB);
+	
 	
 };
 

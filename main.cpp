@@ -1,866 +1,14 @@
 #include <iostream>
 #include<vector>
 #include<string>
+#include<DBClasses.h>
 using namespace std;
-
-class Coloana 
-{private:
-	string nume;
-public:
-	Coloana()
-	{
-		nume = " - ";
-	}
-	Coloana(string n)
-	{
-		this->nume = n;
-	}
-	Coloana(const Coloana& c)
-	{
-		this->nume = c.nume;
-	}
-	Coloana& operator=(const Coloana& c)
-	{
-		this->nume = c.nume;
-		return *this;
-	}
-	~Coloana(){}
-	string GetNume() const { return nume; }
-	void SetNume(string n) { this->nume = n; }
-	friend ostream& operator<<(ostream&, Coloana);
-	friend istream& operator>>(istream&,Coloana&);
-};
-
-
-class Coloana_int : public Coloana
-{
-private:int s=0;
-	   int* v = nullptr;
-public:
-	Coloana_int()
-	{
-		s = 0;
-		v = nullptr;
-	}
-	Coloana_int(string n, int s, int* v) :Coloana(n)
-	{
-		if (v != nullptr && s > 0)
-		{
-			this->s = s;
-			this->v = new int[s];
-			for (int i = 0; i < s; i++)
-			{
-				this->v[i] = v[i];
-			}
-		}
-
-	}
-	Coloana_int(const Coloana_int& c) :Coloana(c)
-	{
-		if (c.v != nullptr && c.s != 0)
-		{
-			this->s = c.s;
-			this->v = new int[c.s];
-			for (int i = 0; i < c.s; i++)
-			{
-				this->v[i] = c.v[i];
-			}
-		}
-		else
-		{
-			this->v = nullptr;
-			this->s = 0;
-		}
-	}
-	Coloana_int& operator=(const Coloana_int& c)
-	{
-		Coloana::operator=(c);
-		if (c.v != nullptr && c.s != 0)
-		{
-			this->s = c.s;
-			this->v = new int[c.s];
-			for (int i = 0; i < c.s; i++)
-			{
-				this->v[i] = c.v[i];
-			}
-		}
-		else
-		{
-			this->v = nullptr;
-			this->s = 0;
-		}
-		return *this;
-	}
-	~Coloana_int()
-	{
-		if (v != nullptr)
-		{
-			delete[] v;
-		}
-	}
-	void setVector(int* v, int s)
-	{
-		if (v != nullptr && s != 0)
-		{
-			this->s = s;
-			if (this->v != nullptr)
-			{
-				delete[] this->v;
-
-			}
-			this->v = new int[s];
-			for (int i = 0; i < s; i++)
-			{
-				this->v[i] = v[i];
-			}
-		}
-	}
-	int* getVector()
-	{
-		if (v != nullptr)
-		{
-			int* copie = new int[s];
-			for (int i = 0; i < s; i++)
-			{
-				copie[i] = v[i];
-
-			}
-			return copie;
-		}
-		else
-		{
-			return nullptr;
-		}
-	}
-	int getVectorSize()
-	{
-		return s;
-	}
-	friend ostream& operator<<(ostream&, Coloana_int);
-	friend istream& operator>>(istream&, Coloana_int&);
-};
-
-
-class Coloana_float : public Coloana
-{
-private:int s=0;
-	   float* v = nullptr;
-public:
-	Coloana_float()
-	{
-		s = 0;
-		v = nullptr;
-	}
-	Coloana_float(string n, int s, float* v) :Coloana(n)
-	{
-		if (v != nullptr && s > 0)
-		{
-			this->s = s;
-			this->v = new float[s];
-			for (int i = 0; i < s; i++)
-			{
-				this->v[i] = v[i];
-			}
-		}
-
-	}
-	Coloana_float(const Coloana_float& c) :Coloana(c)
-	{
-		if (c.v != nullptr && c.s != 0)
-		{
-			this->s = c.s;
-			this->v = new float[c.s];
-			for (int i = 0; i < c.s; i++)
-			{
-				this->v[i] = c.v[i];
-			}
-		}
-		else
-		{
-			this->v = nullptr;
-			this->s = 0;
-		}
-	}
-	Coloana_float& operator=(const Coloana_float& c)
-	{
-		Coloana::operator=(c);
-		if (c.v != nullptr && c.s != 0)
-		{
-			this->s = c.s;
-			this->v = new float[c.s];
-			for (int i = 0; i < c.s; i++)
-			{
-				this->v[i] = c.v[i];
-			}
-		}
-		else
-		{
-			this->v = nullptr;
-			this->s = 0;
-		}
-		return *this;
-	}
-	~Coloana_float()
-	{
-		if (v != nullptr)
-		{
-			delete[] v;
-		}
-	}
-	void setVector(float* v, int s)
-	{
-		if (v != nullptr && s != 0)
-		{
-			this->s = s;
-			if (this->v != nullptr)
-			{
-				delete[] this->v;
-
-			}
-			this->v = new float[s];
-			for (int i = 0; i < s; i++)
-			{
-				this->v[i] = v[i];
-			}
-		}
-	}
-	float* getVector()
-	{
-		if (v != nullptr)
-		{
-			float* copie = new float[s];
-			for (int i = 0; i < s; i++)
-			{
-				copie[i] = v[i];
-
-			}
-			return copie;
-		}
-		else
-		{
-			return nullptr;
-		}
-	}
-	int getVectorSize()
-	{
-		return s;
-	}
-	friend ostream& operator<<(ostream&, Coloana_float);
-	friend istream& operator>>(istream&, Coloana_float&);
-};
-
-class Coloana_string : public Coloana
-{
-private: int s=0;
-	   vector<string> v;
-public:
-	Coloana_string(){}
-	Coloana_string(string nume,int s, vector<string> v):Coloana(nume)
-	{
-		
-		if(v.empty()==false&& s>0)
-		{
-			this->s = s;
-			v.resize(s);
-			for (int i = 0; i < s; i++)
-			{
-				this->v[i] = v[i];
-			}
-		}
-
-	}
-	~Coloana_string(){}
-	Coloana_string(const Coloana_string& c) :Coloana(c)
-	{
-		if (c.v.empty()==false && c.s != 0)
-		{
-			this->s = c.s;
-			v.resize(c.s);
-			for (int i = 0; i < c.s; i++)
-			{
-				this->v[i] = c.v[i];
-			}
-		}
-		else
-		{
-			v.clear();
-			this->s = 0;
-		}
-	}
-	Coloana_string& operator=(const Coloana_string& c)
-	{
-		Coloana::operator=(c);
-		if (c.v.empty() == false && c.s != 0)
-		{
-			this->s = c.s;
-			v.resize(c.s);
-			for (int i = 0; i < c.s; i++)
-			{
-				this->v[i] = c.v[i];
-			}
-		}
-		else
-		{
-			v.clear();
-			this->s = 0;
-		}
-		return *this;
-	}
-
-	void setVector(vector<string> x, int s)
-	{
-		if (v.empty()==false && s != 0)
-		{
-			this->s = s;
-			if (v.empty() == false)
-			{
-				v.clear();
-
-			}
-			v.resize(s);
-			for (int i = 0; i < s; i++)
-			{
-				this->v[i] = v[i];
-			}
-		}
-	}
-
-	vector<string> getVector()
-	{
-		if (v.empty()==false)
-		{
-			vector<string> copie;
-			copie.resize(s);
-			for (int i = 0; i < s; i++)
-			{
-				copie[i] = v[i];
-
-			}
-			return copie;
-		}
-		else
-		{
-			vector<string> empty;
-			return empty;
-		}
-	}
-
-	int getVectorSize()
-	{
-		return s;
-	}
-
-	friend ostream& operator<<(ostream&, Coloana_string);
-	friend istream& operator>>(istream&, Coloana_string&);
-};
-
-class Tabel
-{
-private:string nume = "";
-	   int si = 0;
-	   int sf = 0;
-	   int ss = 0;
-	   vector<Coloana_int> vi;
-	   vector<Coloana_float> vf;
-	   vector<Coloana_string> vs;
-public:
-	Tabel(){}
-	Tabel(string nume,int si, vector<Coloana_int>vi, int  sf, vector<Coloana_float> vf,int ss, vector<Coloana_string> vs)
-	{
-		this->nume = nume;
-		this->si = si;
-		this->sf = sf;
-		this->ss = ss;
-		this->vi = vi;
-		this->vf = vf;
-		this->vs = vs;
-	}
-	~Tabel(){}
-	Tabel(const Tabel& t)
-	{
-		this->nume = t.nume;
-		this->si = t.si;
-		this->sf = t.sf;
-		this->ss = t.ss;
-		if (t.vi.empty() == false && t.si != 0)
-		{
-			this->si = t.si;
-			vi.resize(t.si);
-			for (int i = 0; i < t.si; i++)
-			{
-				this->vi[i] = t.vi[i];
-			}
-		}
-		else
-		{
-			vi.clear();
-			this->si = 0;
-		}
-		if (t.vf.empty() == false && t.sf != 0)
-		{
-			this->sf = t.sf;
-			vf.resize(t.sf);
-			for (int i = 0; i < t.sf; i++)
-			{
-				this->vf[i] = t.vf[i];
-			}
-		}
-		else
-		{
-			vf.clear();
-			this->sf = 0;
-		}
-		if (t.vs.empty() == false && t.ss != 0)
-		{
-			this->ss = t.ss;
-			vs.resize(t.ss);
-			for (int i = 0; i < t.ss; i++)
-			{
-				this->vs[i] = t.vs[i];
-			}
-		}
-		else
-		{
-			vs.clear();
-			this->ss = 0;
-		}
-	}
-	Tabel& operator=(const Tabel& t)
-	{
-		this->nume = t.nume;
-		this->si = t.si;
-		this->sf = t.sf;
-		this->ss = t.ss;
-		if (t.vi.empty() == false && t.si != 0)
-		{
-			this->si = t.si;
-			vi.resize(t.si);
-			for (int i = 0; i < t.si; i++)
-			{
-				this->vi[i] = t.vi[i];
-			}
-		}
-		else
-		{
-			vi.clear();
-			this->si = 0;
-		}
-		if (t.vf.empty() == false && t.sf != 0)
-		{
-			this->sf = t.sf;
-			vf.resize(t.sf);
-			for (int i = 0; i < t.sf; i++)
-			{
-				this->vf[i] = t.vf[i];
-			}
-		}
-		else
-		{
-			vf.clear();
-			this->sf = 0;
-		}
-		if (t.vs.empty() == false && t.ss != 0)
-		{
-			this->ss = t.ss;
-			vs.resize(t.ss);
-			for (int i = 0; i < t.ss; i++)
-			{
-				this->vs[i] = t.vs[i];
-			}
-		}
-		else
-		{
-			vs.clear();
-			this->ss = 0;
-		}
-		return *this;
-	}
-	string GetNume() const { return nume; }
-	void SetNume(string n) { this->nume = n; }
-	void setVI(vector<Coloana_int> vi, int si)
-	{
-		if (vi.empty() == false && si != 0)
-		{
-			this->si = si;
-			if (vi.empty() == false)
-			{
-				vi.clear();
-
-			}
-			vi.resize(si);
-			for (int i = 0; i < si; i++)
-			{
-				this->vi[i] = vi[i];
-			}
-		}
-	}
-
-	vector<Coloana_int> getVI()
-	{
-		if (vi.empty() == false)
-		{
-			vector<Coloana_int> copie;
-			copie.resize(si);
-			for (int i = 0; i < si; i++)
-			{
-				copie[i] = vi[i];
-
-			}
-			return copie;
-		}
-		else
-		{
-			vector<Coloana_int> empty;
-			return empty;
-		}
-	}
-
-	void setVF(vector<Coloana_float> vf, int sf)
-	{
-		if (vf.empty() == false && sf != 0)
-		{
-			this->sf = sf;
-			if (vf.empty() == false)
-			{
-				vf.clear();
-
-			}
-			vf.resize(sf);
-			for (int i = 0; i < sf; i++)
-			{
-				this->vf[i] = vf[i];
-			}
-		}
-	}
-
-	vector<Coloana_float> getVF()
-	{
-		if (vf.empty() == false)
-		{
-			vector<Coloana_float> copie;
-			copie.resize(sf);
-			for (int i = 0; i < sf; i++)
-			{
-				copie[i] = vf[i];
-
-			}
-			return copie;
-		}
-		else
-		{
-			vector<Coloana_float> empty;
-			return empty;
-		}
-	}
-
-	void setVS(vector<Coloana_string> vs, int ss)
-	{
-		if (vs.empty() == false && ss != 0)
-		{
-			this->ss = ss;
-			if (vs.empty() == false)
-			{
-				vs.clear();
-
-			}
-			vs.resize(ss);
-			for (int i = 0; i < ss; i++)
-			{
-				this->vs[i] = vs[i];
-			}
-		}
-	}
-
-	vector<Coloana_string> getVS()
-	{
-		if (vs.empty() == false)
-		{
-			vector<Coloana_string> copie;
-			copie.resize(ss);
-			for (int i = 0; i < ss; i++)
-			{
-				copie[i] = vs[i];
-
-			}
-			return copie;
-		}
-		else
-		{
-			vector<Coloana_string> empty;
-			return empty;
-		}
-	}
-
-	int getSI()
-	{
-		return si;
-	}
-	int getSF()
-	{
-		return sf;
-	}
-	int getSS()
-	{
-		return ss;
-	}
-
-	friend ostream& operator<<(ostream&, Tabel);
-	friend istream& operator>>(istream&, Tabel&);
-	friend void Identificare_comanda(string command, vector<Tabel>& DB);
-};
-
-
-ostream& operator<<(ostream& out, Coloana c)
-{
-	cout << "Nume Coloana: ";
-	out << c.nume << endl;
-	return out;
-}
-istream& operator>>(istream& in, Coloana& c)
-{
-	cout << "Nume Coloana: ";
-	in >> ws;
-	getline(in, c.nume);
-	return in;
-}
-
-ostream& operator<<(ostream& out, Coloana_int c)
-{
-	out << (Coloana)c << endl;
-	out << "Nr. Inregistrari: "<< c.s << endl;
-	out << "Inregistrari: "<<endl;
-	if (c.v != nullptr)
-	{
-		for (int i = 0; i < c.s; i++)
-		{
-			out <<"	     "<< c.v[i]<<"   " << endl;
-		}
-	}
-	else out << "N/A"<<"   ";
-	return out;
-}
-istream& operator>>(istream& in, Coloana_int& c)
-{
-	in >> (Coloana&)c;
-	cout << "Nr. Inregistrari: ";
-	in >> c.s;
-	if (c.v != nullptr)
-	{
-		delete[] c.v;
-	}
-	if (c.s > 0)
-	{
-		c.v = new int[c.s];
-		for (int i = 0; i < c.s; i++)
-		{
-			cout << "Inregistrarea [" << i << "]:";
-			in >> c.v[i];
-		}
-	}
-	else
-	{
-		c.s = 0;
-		c.v = nullptr;
-	}
-	return in;
-}
-
-ostream& operator<<(ostream& out, Coloana_float c)
-{
-	out << (Coloana)c << endl;
-	out << "Nr. Inregistrari: " << c.s << endl;
-	out << "Inregistrari: " << endl;
-	if (c.v != nullptr)
-	{
-		for (int i = 0; i < c.s; i++)
-		{
-			out << "	     " << c.v[i] << "   " << endl;
-		}
-	}
-	else out << "N/A"<<"   ";
-	return out;
-}
-istream& operator>>(istream& in, Coloana_float& c)
-{
-	in >> (Coloana&)c;
-	cout << "Nr. Inregistrari: ";
-	in >> c.s;
-	if (c.v != nullptr)
-	{
-		delete[] c.v;
-	}
-	if (c.s > 0)
-	{
-		c.v = new float[c.s];
-		for (int i = 0; i < c.s; i++)
-		{
-			cout << "Inregistrarea [" << i << "]:";
-			in >> c.v[i];
-		}
-	}
-	else
-	{
-		c.s = 0;
-		c.v = nullptr;
-	}
-	return in;
-}
-ostream& operator<<(ostream& out, Coloana_string c)
-{
-	out << (Coloana)c << endl;
-	out << "Nr. Inregistrari: " << c.s << endl;
-	out << "Inregistrari: " << endl;
-	if (c.v.empty() == false)
-	{
-		for (int i = 0; i < c.s; i++)
-		{
-			out << "	     " << c.v[i] << "   " << endl;
-		}
-	}
-	else out << "N/A"<<"  ";
-	return out;
-}
-istream& operator>>(istream& in, Coloana_string& c)
-{
-	in >> (Coloana&)c;
-	cout << "Nr. Inregistrari: ";
-	in >> c.s;
-	
-	if (c.v.empty()==false)
-	{
-		c.v.clear();
-	}
-	if (c.s > 0)
-	{
-		c.v.resize(c.s);
-		for (int i = 0; i < c.s; i++)
-		{
-			cout << "Inregistrarea [" << i << "]:";
-			in >> c.v[i];
-		}
-	}
-	else
-	{
-		c.s = 0;
-		c.v.clear();
-	}
-	return in;
-}
-
-ostream& operator<<(ostream& out, Tabel c)
-{
-	cout << "Nume Tabel: ";
-	out << c.nume << endl;
-	
-	if (c.vi.empty() == false)
-	{
-		for (int i = 0; i < c.si; i++)
-		{
-			out << "	     " << c.vi[i] << "   " ;
-			
-		}
-	}
-	else out << "N/A";
-
-	if (c.vf.empty() == false)
-	{
-		for (int i = 0; i < c.sf; i++)
-		{
-			out << "	     " << c.vf[i] << "   ";
-
-		}
-	}
-	else out << "N/A";
-	if (c.vs.empty() == false)
-	{
-		for (int i = 0; i < c.ss; i++)
-		{
-			out << "	     " << c.vs[i] << "   ";
-
-		}
-	}
-	else out << "N/A";
-	cout << endl;
-	
-	return out;
-}
-istream& operator>>(istream& in, Tabel& c)
-{
-	cout << "Nume Tabel: ";
-	in >> ws;
-	getline(in, c.nume);
-	cout << "Nr. Col. Tip int: ";
-	in >> c.si;
-	if (c.vi.empty() == false)
-	{
-		c.vi.clear();
-	}
-	if (c.si > 0)
-	{
-		c.vi.resize(c.si);
-		for (int i = 0; i < c.si; i++)
-		{
-			cout << "Inregistrarea [" << i << "]:";
-			in >> c.vi[i];
-		}
-	}
-	else
-	{
-		c.si = 0;
-		c.vi.clear();
-	}
-	cout << "Nr. Col. Tip Float: ";
-	in >> c.sf;
-	if (c.vf.empty() == false)
-	{
-		c.vf.clear();
-	}
-	if (c.sf > 0)
-	{
-		c.vf.resize(c.sf);
-		for (int i = 0; i < c.sf; i++)
-		{
-			cout << "Inregistrarea [" << i << "]:";
-			in >> c.vf[i];
-		}
-	}
-	else
-	{
-		c.sf = 0;
-		c.vf.clear();
-	}
-	cout << "Nr. Col. Tip String: ";
-	in>> c.ss;
-	if (c.vs.empty() == false)
-	{
-		c.vs.clear();
-	}
-	if (c.ss > 0)
-	{
-		c.vs.resize(c.ss);
-		for (int i = 0; i < c.ss; i++)
-		{
-			cout << "Inregistrarea [" << i << "]:";
-			in >> c.vs[i];
-		}
-	}
-	else
-	{
-		c.ss = 0;
-		c.vs.clear();
-	}
-	return in;
-}
-
-
-
-
 
 void Identificare_comanda(string command, vector<Tabel>& DB)
 {
-	
-	
-	
+
+
+
 	if (command.substr(0, 13) == "DISPLAY TABLE")
 	{
 		int k = 0;
@@ -888,7 +36,7 @@ void Identificare_comanda(string command, vector<Tabel>& DB)
 
 	if (command.substr(0, 13) == "CREATE TABLE ")
 	{
-		
+
 		struct col
 		{
 			string name;
@@ -906,33 +54,33 @@ void Identificare_comanda(string command, vector<Tabel>& DB)
 		alfa.tip = "";
 		alfa.bazastring = "";
 
-		
-		string nume="";
+
+		string nume = "";
 		int si = 0;
 		int sf = 0;
-		int ss=0;
+		int ss = 0;
 		vector<Coloana_int> vi;
 		vector<Coloana_float>vf;
 		vector<Coloana_string>vs;
-		
+
 		command.erase(0, 13);
 
 		for (int i = 0; i < command.length(); i++)
 		{
 			if (command[i] == '(')
 			{
-				nume=(command.substr(0, i - 1));
+				nume = (command.substr(0, i - 1));
 				command.erase(0, i - 1);
 				i = command.length() + 1;
 			}
 		}
 
 		command.erase(0, 2);
-		
-		
-	
+
+
+
 		while (command.empty() == false)
-		{ 
+		{
 			for (int i = 0; i < command.length(); i++)
 			{
 				if (command[i] == ',')
@@ -943,7 +91,7 @@ void Identificare_comanda(string command, vector<Tabel>& DB)
 					i = command.length() + 1;
 				}
 			}
-			
+
 			for (int i = 0; i < command.length(); i++)
 			{
 				if (command[i] == ',')
@@ -1042,18 +190,17 @@ void Identificare_comanda(string command, vector<Tabel>& DB)
 
 
 			}
+
 			if (alfa.tip == "string")
 			{
 				ss++;
-				vector<string>a = { "" };
-				a.resize(alfa.dimensiune);
-				for (int i = 0; i < alfa.dimensiune; i++)
-					a[i] = alfa.bazastring;
-
+				vector<string>a;
+				a.resize(alfa.dimensiune, alfa.bazastring);
 				Coloana_string CS(alfa.name, alfa.dimensiune, a);
 				vs.push_back(CS);
 
 			}
+
 			alfa.name = "";
 			alfa.tip = "";
 			alfa.dimensiune = 0;
@@ -1067,74 +214,772 @@ void Identificare_comanda(string command, vector<Tabel>& DB)
 
 	}
 
+
+
+
 	if (command.substr(0, 12) == "INSERT INTO ")
 	{
-	command.erase(0,12);
-	}
-	if (command.substr(0, 12) == "DELETE FROM ")
-	{
+
 		string numetabel = "";
-		string numecoloana = "";
-		string coloanadesters = "";
+		int indice = 0;
 		command.erase(0, 12);
 		for (int i = 0; i < command.length(); i++)
 		{
 			if (command[i] == ' ')
 			{
-				numetabel = (command.substr(0, i - 1));
-				command.erase(0, i - 1);
+				numetabel = (command.substr(0, i));
+				command.erase(0, i);
+				i = command.length() + 1;
+			}
+		}
+		for (int i = 0; i < DB.size(); i++)
+			if (DB[i].GetNume() == numetabel)
+				indice = i;
+		command.erase(0, 8);
+
+		int imax = DB[indice].vi.size();
+		int fmax = DB[indice].vf.size();
+		int smax = DB[indice].vs.size();
+		string element = "";
+
+
+		while (command.empty() == false)
+		{
+			int sw1 = 0; int sw2 = 0; int sw3 = 0;
+
+			for (int i = 0; i < command.length(); i++)
+			{
+				if (command[i] == ',' || command[i] == ')')
+				{
+					element = (command.substr(0, i));
+					command.erase(0, i);
+					i = command.length() + 1;
+				}
+			}
+			if (command[0] == ',')
+				command.erase(0, 2);
+			else
+				command.erase(0, 1);
+
+			if (imax > 0)
+			{
+
+				DB[indice].vi[DB[indice].vi.size() - imax].AddElement(stoi(element));
+				sw1 = 1;
+
+			}
+			if (imax == 0 && fmax > 0)
+			{
+
+				DB[indice].vf[DB[indice].vf.size() - fmax].AddElement(stof(element));
+				sw2 = 1;
+
+			}
+			if (fmax == 0 && smax > 0)
+			{
+
+				DB[indice].vs[DB[indice].vs.size() - smax].AddElement(element);
+				sw3 = 1;
+
+			}
+			if (sw1 == 1) imax--;
+			if (sw2 == 1) fmax--;
+			if (sw3 == 1) smax--;
+
+		}
+	}
+
+	if (command.substr(0, 7) == "UPDATE ")
+	{
+		command.erase(0, 7);
+		string numetabel = "";
+		string coloanaupdate = "";
+		string valoaremodif = "";
+		string coloanaconditie = "";
+
+		for (int i = 0; i < command.length(); i++)
+		{
+			if (command[i] == ' ')
+			{
+				numetabel = (command.substr(0, i));
+				command.erase(0, i);
+				i = command.length() + 1;
+			}
+		}
+		command.erase(0, 5);
+		for (int i = 0; i < command.length(); i++)
+		{
+			if (command[i] == ' ')
+			{
+				coloanaupdate = (command.substr(0, i));
+				command.erase(0, i);
+				i = command.length() + 1;
+			}
+		}
+		command.erase(0, 3);
+
+		for (int i = 0; i < command.length(); i++)
+		{
+			if (command[i] == ' ')
+			{
+				valoaremodif = (command.substr(0, i));
+				command.erase(0, i);
+				i = command.length() + 1;
+			}
+		}
+		command.erase(0, 7);
+
+		for (int i = 0; i < command.length(); i++)
+		{
+			if (command[i] == ' ')
+			{
+				coloanaconditie = (command.substr(0, i));
+				command.erase(0, i);
+				i = command.length() + 1;
+			}
+		}
+		command.erase(0, 3);
+		string valconditie = command;
+
+		string tip = "";
+		int indicet = 0;
+		int indicecu = 0;
+		for (int i = 0; i < DB.size(); i++)
+			if (DB[i].GetNume() == numetabel)
+				indicet = i;
+
+		for (int i = 0; i < DB[indicet].vi.size(); i++)
+		{
+			if (DB[indicet].vi[i].GetNume() == coloanaupdate)
+				tip = "int";
+			indicecu = i;
+		}
+		for (int i = 0; i < DB[indicet].vf.size(); i++)
+		{
+			if (DB[indicet].vf[i].GetNume() == coloanaupdate)
+				tip = "float";
+			indicecu = i;
+		}
+		for (int i = 0; i < DB[indicet].vs.size(); i++)
+		{
+			if (DB[indicet].vs[i].GetNume() == coloanaupdate)
+				tip = "string";
+			indicecu = i;
+		}
+
+		int indicecc = 0;
+		string tip2 = "";
+		for (int i = 0; i < DB[indicet].vi.size(); i++)
+		{
+			if (DB[indicet].vi[i].GetNume() == coloanaconditie)
+				tip2 = "int";
+			indicecc = i;
+		}
+		for (int i = 0; i < DB[indicet].vf.size(); i++)
+		{
+			if (DB[indicet].vf[i].GetNume() == coloanaconditie)
+				tip2 = "float";
+			indicecc = i;
+		}
+		for (int i = 0; i < DB[indicet].vs.size(); i++)
+		{
+			if (DB[indicet].vs[i].GetNume() == coloanaconditie)
+				tip2 = "string";
+			indicecc = i;
+		}
+
+
+		if (tip2 == "int")
+		{
+			vector<int> pozitii;
+			int* y = DB[indicet].vi[indicecc].getVector();
+			for (int i = 0; i < DB[indicet].vi[indicecc].getVectorSize(); i++)
+				if (y[i] = stoi(valconditie))
+					pozitii.push_back(i);
+			if (tip == "int")
+			{
+				int* x = DB[indicet].vi[indicecu].getVector();
+				while (pozitii.empty() == false)
+				{
+					for (int i = 0; i < DB[indicet].vi[indicecu].getVectorSize(); i++)
+					{
+						if (i == pozitii[0])
+							x[i] = stoi(valoaremodif);
+					}
+					pozitii.erase(pozitii.begin());
+				}
+				DB[indicet].vi[indicecu].setVector(x, DB[indicet].vi[indicecu].getVectorSize());
+			}
+			if (tip == "float")
+			{
+				float* x = DB[indicet].vf[indicecu].getVector();
+				while (pozitii.empty() == false)
+				{
+					for (int i = 0; i < DB[indicet].vf[indicecu].getVectorSize(); i++)
+					{
+						if (i == pozitii[0])
+							x[i] = stof(valoaremodif);
+					}
+					pozitii.erase(pozitii.begin());
+				}
+				DB[indicet].vf[indicecu].setVector(x, DB[indicet].vf[indicecu].getVectorSize());
+			}
+			if (tip == "string")
+			{
+				vector<string> x = DB[indicet].vs[indicecu].getVector();
+				while (pozitii.empty() == false)
+				{
+					for (int i = 0; i < DB[indicet].vs[indicecu].getVectorSize(); i++)
+					{
+						if (i == pozitii[0])
+							x[i] = valoaremodif;
+					}
+					pozitii.erase(pozitii.begin());
+				}
+				DB[indicet].vs[indicecu].setVector(x, DB[indicet].vs[indicecu].getVectorSize());
+			}
+
+
+		}
+
+		if (tip2 == "float")
+		{
+			vector<int> pozitii;
+			float* y = DB[indicet].vf[indicecc].getVector();
+			for (int i = 0; i < DB[indicet].vf[indicecc].getVectorSize(); i++)
+				if (y[i] = stof(valconditie))
+					pozitii.push_back(i);
+			if (tip == "int")
+			{
+				int* x = DB[indicet].vi[indicecu].getVector();
+				while (pozitii.empty() == false)
+				{
+					for (int i = 0; i < DB[indicet].vi[indicecu].getVectorSize(); i++)
+					{
+						if (i == pozitii[0])
+							x[i] = stoi(valoaremodif);
+					}
+					pozitii.erase(pozitii.begin());
+				}
+				DB[indicet].vi[indicecu].setVector(x, DB[indicet].vi[indicecu].getVectorSize());
+			}
+			if (tip == "float")
+			{
+				float* x = DB[indicet].vf[indicecu].getVector();
+				while (pozitii.empty() == false)
+				{
+					for (int i = 0; i < DB[indicet].vf[indicecu].getVectorSize(); i++)
+					{
+						if (i == pozitii[0])
+							x[i] = stof(valoaremodif);
+					}
+					pozitii.erase(pozitii.begin());
+				}
+				DB[indicet].vf[indicecu].setVector(x, DB[indicet].vf[indicecu].getVectorSize());
+			}
+			if (tip == "string")
+			{
+				vector<string> x = DB[indicet].vs[indicecu].getVector();
+				while (pozitii.empty() == false)
+				{
+					for (int i = 0; i < DB[indicet].vs[indicecu].getVectorSize(); i++)
+					{
+						if (i == pozitii[0])
+							x[i] = valoaremodif;
+					}
+					pozitii.erase(pozitii.begin());
+				}
+				DB[indicet].vs[indicecu].setVector(x, DB[indicet].vs[indicecu].getVectorSize());
+			}
+
+
+		}
+
+		if (tip2 == "string")
+		{
+			vector<int> pozitii;
+			vector<string> y = DB[indicet].vs[indicecc].getVector();
+			for (int i = 0; i < DB[indicet].vs[indicecc].getVectorSize(); i++)
+				if (y[i] == valconditie)
+					pozitii.push_back(i);
+			if (tip == "int")
+			{
+				int* x = DB[indicet].vi[indicecu].getVector();
+				while (pozitii.empty() == false)
+				{
+					for (int i = 0; i < DB[indicet].vi[indicecu].getVectorSize(); i++)
+					{
+						if (i == pozitii[0])
+							x[i] = stoi(valoaremodif);
+					}
+					pozitii.erase(pozitii.begin());
+				}
+				DB[indicet].vi[indicecu].setVector(x, DB[indicet].vi[indicecu].getVectorSize());
+			}
+			if (tip == "float")
+			{
+				float* x = DB[indicet].vf[indicecu].getVector();
+				while (pozitii.empty() == false)
+				{
+					for (int i = 0; i < DB[indicet].vf[indicecu].getVectorSize(); i++)
+					{
+						if (i == pozitii[0])
+							x[i] = stof(valoaremodif);
+					}
+					pozitii.erase(pozitii.begin());
+				}
+				DB[indicet].vf[indicecu].setVector(x, DB[indicet].vf[indicecu].getVectorSize());
+			}
+			if (tip == "string")
+			{
+				vector<string> x = DB[indicet].vs[indicecu].getVector();
+				while (pozitii.empty() == false)
+				{
+					for (int i = 0; i < DB[indicet].vs[indicecu].getVectorSize(); i++)
+					{
+						if (i == pozitii[0])
+							x[i] = valoaremodif;
+					}
+					pozitii.erase(pozitii.begin());
+				}
+				DB[indicet].vs[indicecu].setVector(x, DB[indicet].vs[indicecu].getVectorSize());
+			}
+
+
+		}
+	}
+	if (command.substr(0, 16) == "SELECT ALL FROM ")
+	{
+		string numetabel = "";
+		string coloanaconditie = "";
+		command.erase(0, 16);
+		for (int i = 0; i < command.length(); i++)
+		{
+			if (command[i] == ' ')
+			{
+				numetabel = command.substr(0, i);
+				command.erase(0, i);
+				i = command.length() + 1;
+			}
+		}
+		command.erase(0, 7);
+		for (int i = 0; i < command.length(); i++)
+		{
+			if (command[i] == ' ')
+			{
+				coloanaconditie = command.substr(0, i);
+				command.erase(0, i);
+				i = command.length() + 1;
+			}
+		}
+		command.erase(0, 3);
+		string valoareconditie = command;
+		int indicetabel = 0;
+		int indicecolconditie = 0;
+		string tipcoloanaconditie = "";
+
+		for (int i = 0; i < DB.size(); i++)
+			if (DB[i].GetNume() == numetabel)
+				indicetabel = i;
+		for (int i = 0; i < DB[indicetabel].vi.size(); i++)
+		{
+			if (DB[indicetabel].vi[i].GetNume() == coloanaconditie)
+			{
+				tipcoloanaconditie = "int";
+				indicecolconditie = i;
+			}
+		}
+		for (int i = 0; i < DB[indicetabel].vf.size(); i++)
+		{
+			if (DB[indicetabel].vf[i].GetNume() == coloanaconditie)
+			{
+				tipcoloanaconditie = "float";
+				indicecolconditie = i;
+			}
+		}
+		for (int i = 0; i < DB[indicetabel].vs.size(); i++)
+		{
+			if (DB[indicetabel].vs[i].GetNume() == coloanaconditie)
+			{
+				tipcoloanaconditie = "string";
+				indicecolconditie = i;
+			}
+		}
+		vector<int> pozitii;
+		if (tipcoloanaconditie == "int")
+		{
+			int* y = DB[indicetabel].vi[indicecolconditie].getVector();
+			for (int i = 0; i < DB[indicetabel].vi[indicecolconditie].getVectorSize(); i++)
+				if (y[i] == stoi(valoareconditie))
+					pozitii.push_back(i);
+		}
+		if (tipcoloanaconditie == "float")
+		{
+			float* y = DB[indicetabel].vf[indicecolconditie].getVector();
+			for (int i = 0; i < DB[indicetabel].vf[indicecolconditie].getVectorSize(); i++)
+				if (y[i] == stof(valoareconditie))
+					pozitii.push_back(i);
+		}
+		if (tipcoloanaconditie == "string")
+		{
+			vector<string> y = DB[indicetabel].vs[indicecolconditie].getVector();
+			for (int i = 0; i < DB[indicetabel].vs[indicecolconditie].getVectorSize(); i++)
+				if (y[i] == valoareconditie)
+					pozitii.push_back(i);
+		}
+		vector<int> copie = pozitii;
+		for (int i = 0; i < DB[indicetabel].vi.size(); i++)
+		{
+			pozitii = copie;
+			int* t = DB[indicetabel].vi[i].getVector();
+			cout << DB[indicetabel].vi[i].GetNume() << endl;
+			while (pozitii.empty() == false)
+			{
+				for (int j = 0; j < DB[indicetabel].vi[i].getVectorSize(); j++)
+					if (j == pozitii[0])
+					{
+						cout << "Inregistrarea [" << j << "]: " << t[j] << endl;
+						pozitii.erase(pozitii.begin());
+					}
+			}
+
+		}
+		for (int i = 0; i < DB[indicetabel].vf.size(); i++)
+		{
+			pozitii = copie;
+			float* t = DB[indicetabel].vf[i].getVector();
+			cout << DB[indicetabel].vf[i].GetNume() << endl;
+			while (pozitii.empty() == false)
+			{
+				for (int j = 0; j < DB[indicetabel].vf[i].getVectorSize(); j++)
+					if (j == pozitii[0])
+					{
+						cout << "Inregistrarea [" << j << "]: " << t[j] << endl;
+						pozitii.erase(pozitii.begin());
+					}
+			}
+
+		}
+		for (int i = 0; i < DB[indicetabel].vs.size(); i++)
+		{
+			pozitii = copie;
+			vector<string> t = DB[indicetabel].vs[i].getVector();
+			cout << DB[indicetabel].vs[i].GetNume() << endl;
+			while (pozitii.empty() == false)
+			{
+				for (int j = 0; j < DB[indicetabel].vs[i].getVectorSize(); j++)
+					if (j == pozitii[0])
+					{
+						cout << "Inregistrarea [" << j << "]: " << t[j] << endl;
+						pozitii.erase(pozitii.begin());
+					}
+			}
+
+		}
+
+
+	}
+	else
+		if (command.substr(0, 7) == "SELECT ")
+		{
+			command.erase(0, 7);
+			command.erase(0, 1);
+			vector<string> coloanedisplay;
+			vector<int> indicicoloanedisplay;
+			int count = 0;
+			while (command[count] != ')')
+				count++;
+			string sectiune = command.substr(0, count + 1);
+			sectiune[count] = ',';
+			while (sectiune.empty() == false)
+			{
+				for (int i = 0; i < sectiune.length(); i++)
+				{
+					if (sectiune[i] == ',')
+					{
+						coloanedisplay.push_back(sectiune.substr(0, i));
+						sectiune.erase(0, i);
+						i = sectiune.length() + 1;
+
+					}
+					if (sectiune[0] == ',')
+						sectiune.erase(0, 2);
+				}
+			}
+			command.erase(0, count + 7);
+			string numetabel; int indicetabel;
+			for (int i = 0; i < command.length(); i++)
+			{
+				if (command[i] == ' ')
+				{
+					numetabel = (command.substr(0, i));
+					command.erase(0, i);
+					i = command.length() + 1;
+				}
+			}
+			command.erase(0, 7);
+			string coloanaconditie;
+			int indicecolconditie;
+			string tipcoloanaconditie;
+			for (int i = 0; i < command.length(); i++)
+			{
+				if (command[i] == ' ')
+				{
+					coloanaconditie = (command.substr(0, i));
+					command.erase(0, i);
+					i = command.length() + 1;
+				}
+			}
+			command.erase(0, 3);
+			string valoareconditie = command;
+			for (int i = 0; i < DB.size(); i++)
+				if (DB[i].GetNume() == numetabel)
+					indicetabel = i;
+
+			for (int i = 0; i < DB[indicetabel].vi.size(); i++)
+			{
+				if (DB[indicetabel].vi[i].GetNume() == coloanaconditie)
+				{
+					tipcoloanaconditie = "int";
+					indicecolconditie = i;
+				}
+			}
+			for (int i = 0; i < DB[indicetabel].vf.size(); i++)
+			{
+				if (DB[indicetabel].vf[i].GetNume() == coloanaconditie)
+				{
+					tipcoloanaconditie = "float";
+					indicecolconditie = i;
+				}
+			}
+			for (int i = 0; i < DB[indicetabel].vs.size(); i++)
+			{
+				if (DB[indicetabel].vs[i].GetNume() == coloanaconditie)
+				{
+					tipcoloanaconditie = "string";
+					indicecolconditie = i;
+				}
+			}
+			vector<int> pozitii;
+			if (tipcoloanaconditie == "int")
+			{
+				int* y = DB[indicetabel].vi[indicecolconditie].getVector();
+				for (int i = 0; i < DB[indicetabel].vi[indicecolconditie].getVectorSize(); i++)
+					if (y[i] == stoi(valoareconditie))
+						pozitii.push_back(i);
+			}
+			if (tipcoloanaconditie == "float")
+			{
+				float* y = DB[indicetabel].vf[indicecolconditie].getVector();
+				for (int i = 0; i < DB[indicetabel].vf[indicecolconditie].getVectorSize(); i++)
+					if (y[i] == stof(valoareconditie))
+						pozitii.push_back(i);
+			}
+			if (tipcoloanaconditie == "string")
+			{
+				vector<string> y = DB[indicetabel].vs[indicecolconditie].getVector();
+				for (int i = 0; i < DB[indicetabel].vs[indicecolconditie].getVectorSize(); i++)
+					if (y[i] == valoareconditie)
+						pozitii.push_back(i);
+			}
+			vector<int> copie = pozitii;
+
+
+			while (coloanedisplay.size() > 0)
+			{
+
+				for (int i = 0; i < DB[indicetabel].vi.size(); i++)
+				{
+					if (DB[indicetabel].vi[i].GetNume() == coloanedisplay[0])
+					{
+						int* t = DB[indicetabel].vi[i].getVector();
+						cout << DB[indicetabel].vi[i].GetNume() << endl;
+						while (pozitii.empty() == false)
+						{
+							for (int j = 0; j < DB[indicetabel].vi[i].getVectorSize(); j++)
+								if (j == pozitii[0])
+								{
+									cout << "Inregistrarea [" << j << "]: " << t[j] << endl;
+									pozitii.erase(pozitii.begin());
+								}
+						}
+
+						i = DB[indicetabel].vi.size() + 1;
+					}
+				}
+
+
+
+				for (int i = 0; i < DB[indicetabel].vf.size(); i++)
+				{
+					if (DB[indicetabel].vf[i].GetNume() == coloanedisplay[0])
+					{
+						float* t = DB[indicetabel].vf[i].getVector();
+						cout << DB[indicetabel].vf[i].GetNume() << endl;
+						while (pozitii.empty() == false)
+						{
+							for (int j = 0; j < DB[indicetabel].vf[i].getVectorSize(); j++)
+								if (j == pozitii[0])
+								{
+									cout << "Inregistrarea [" << j << "]: " << t[j] << endl;
+									pozitii.erase(pozitii.begin());
+								}
+
+						}
+
+
+						i = DB[indicetabel].vf.size() + 1;
+					}
+				}
+
+
+
+				for (int i = 0; i < DB[indicetabel].vs.size(); i++)
+				{
+					if (DB[indicetabel].vs[i].GetNume() == coloanedisplay[0])
+					{
+						vector<string> t = DB[indicetabel].vs[i].getVector();
+						cout << DB[indicetabel].vs[i].GetNume() << endl;
+						while (pozitii.empty() == false)
+						{
+							for (int j = 0; j < DB[indicetabel].vs[i].getVectorSize(); j++)
+								if (j == pozitii[0])
+								{
+									cout << "Inregistrarea [" << j << "]: " << t[j] << endl;
+									pozitii.erase(pozitii.begin());
+								}
+						}
+
+						i = DB[indicetabel].vs.size() + 1;
+					}
+				}
+
+				if (coloanedisplay.size() == 1)
+					coloanedisplay.clear();
+				else
+				{
+					coloanedisplay.erase(coloanedisplay.begin());
+				}
+				pozitii = copie;
+
+			}
+
+		}
+
+	if (command.substr(0, 12) == "DELETE FROM ")
+	{
+		string numetabel = "";
+		command.erase(0, 12);
+		for (int i = 0; i < command.length(); i++)
+		{
+			if (command[i] == ' ')
+			{
+				numetabel = (command.substr(0, i));
+				command.erase(0, i);
 				i = command.length() + 1;
 			}
 		}
 		command.erase(0, 1);
 		if (command.substr(0, 6) == "WHERE ")
 			command.erase(0, 6);
+
+		string coloanaconditie;
+		int indicecolconditie;
+		string tipcoloanaconditie;
 		for (int i = 0; i < command.length(); i++)
 		{
 			if (command[i] == ' ')
 			{
-				numecoloana = (command.substr(0, i - 1));
-				command.erase(0, i - 1);
+				coloanaconditie = (command.substr(0, i));
+				command.erase(0, i);
 				i = command.length() + 1;
 			}
 		}
-		command.erase(0, 3); for (int i = 0; i < command.length(); i++)
-		{
-			if (command[i] == ' ')
-			{
-				coloanadesters = (command.substr(0, i - 1));
-				command.erase(0, i - 1);
-				i = command.length() + 1;
-			}
-		}
+		command.erase(0, 3);
+		int indicetabel = 0;
+		string valoareconditie = command;
 		for (int i = 0; i < DB.size(); i++)
-		{
 			if (DB[i].GetNume() == numetabel)
+				indicetabel = i;
+		for (int i = 0; i < DB[indicetabel].vi.size(); i++)
+		{
+			if (DB[indicetabel].vi[i].GetNume() == coloanaconditie)
 			{
-				for (vector <Coloana_int>::iterator it=DB[i].vi.begin();it!=DB[i].vi.end();++it)
-					if (it->GetNume() == numecoloana)
-					{
-						DB[i].vi.erase(it);
-					}
-				for (vector <Coloana_float>::iterator it = DB[i].vf.begin(); it != DB[i].vf.end(); ++it)
-					if (it->GetNume() == numecoloana)
-					{
-						DB[i].vf.erase(it);
-					}
-				for (vector <Coloana_string>::iterator it = DB[i].vs.begin(); it != DB[i].vs.end(); ++it)
-					if (it->GetNume() == numecoloana)
-					{
-						DB[i].vs.erase(it);
-					}
+				tipcoloanaconditie = "int";
+				indicecolconditie = i;
 			}
 		}
+		for (int i = 0; i < DB[indicetabel].vf.size(); i++)
+		{
+			if (DB[indicetabel].vf[i].GetNume() == coloanaconditie)
+			{
+				tipcoloanaconditie = "float";
+				indicecolconditie = i;
+			}
+		}
+		for (int i = 0; i < DB[indicetabel].vs.size(); i++)
+		{
+			if (DB[indicetabel].vs[i].GetNume() == coloanaconditie)
+			{
+				tipcoloanaconditie = "string";
+				indicecolconditie = i;
+			}
+		}
+		vector<int> pozitii;
+		if (tipcoloanaconditie == "int")
+		{
+			int* y = DB[indicetabel].vi[indicecolconditie].getVector();
+			for (int i = 0; i < DB[indicetabel].vi[indicecolconditie].getVectorSize(); i++)
+				if (y[i] == stoi(valoareconditie))
+					pozitii.push_back(i);
+		}
+		if (tipcoloanaconditie == "float")
+		{
+			float* y = DB[indicetabel].vf[indicecolconditie].getVector();
+			for (int i = 0; i < DB[indicetabel].vf[indicecolconditie].getVectorSize(); i++)
+				if (y[i] == stof(valoareconditie))
+					pozitii.push_back(i);
+		}
+		if (tipcoloanaconditie == "string")
+		{
+			vector<string> y = DB[indicetabel].vs[indicecolconditie].getVector();
+			for (int i = 0; i < DB[indicetabel].vs[indicecolconditie].getVectorSize(); i++)
+				if (y[i] == valoareconditie)
+					pozitii.push_back(i);
+		}
+		
+		
+
+		for (int j = pozitii.size()-1; j >= 0; j--)
+		{
+			for (int i = 0; i < DB[indicetabel].vi.size(); i++)
+			{
+				DB[indicetabel].vi[i].RemoveElementfromPosition(pozitii[j]);
+			}
+			for (int i = 0; i < DB[indicetabel].vf.size(); i++)
+			{
+				DB[indicetabel].vf[i].RemoveElementfromPosition(pozitii[j]);
+			}
 
 
+			for (int i = 0; i < DB[indicetabel].vs.size(); i++)
+			{
 
+				DB[indicetabel].vs[i].RemoveElementfromPosition(pozitii[j]);
 
+			}
+		}
 
 	}
 }
+
+			
+		
+
+
+
+
+
 
 
 
@@ -1150,9 +995,14 @@ int main()
 	cout << "Introduceti Comanda:";
 	getline(cin, command);
 	Identificare_comanda(command, DB);
+	cout << "Introduceti Comanda:";
+	getline(cin, command);
+	Identificare_comanda(command, DB);
+
 	
 	
-};
+	
+}
 
 	
 	

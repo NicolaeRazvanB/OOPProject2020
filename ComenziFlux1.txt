@@ -1,0 +1,10 @@
+CREATE TABLE tabelAngajati ((nume, string, 20, -), (varsta, int, 3, 20), (salariuFix, int, 5, 2000), (bonus, float, 5, 0.05))
+DISPLAY TABLE tabelAngajati
+INSERT INTO tabelAngajati VALUES(Ionescu Ion, 25, 2500, 0.5)
+INSERT INTO tabelAngajati VALUES(Ionescu Dan, 28, 1500, 0.2)
+INSERT INTO tabelAngajati VALUES(Popa Ana, 25, 3500, 0)
+SELECT ALL FROM tabelAngajati
+SELECT ALL FROM tabelAngajati WHERE salariuFix = 2500
+SELECT (nume, varsta) FROM tabelAngajati WHERE varsta = 25
+SELECT (nume, salariuFix) FROM tabelAngajati
+SELECT ALL FROM tabelAngajati WHERE nume = Popa Ana

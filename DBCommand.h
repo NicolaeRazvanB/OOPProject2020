@@ -1,42 +1,57 @@
 #pragma once
 #include <iostream>
+#include <fstream>
 #include<vector>
 #include<string>
 #include "DBTables.h"
+#include <algorithm>
 using namespace std;
 class Command
 {
 private:
 	string commandText;
+
 public:
 	void setCommand(string s)
 	{
 		commandText = s;
 	}
-	void IdentificareDisplayTable(vector<Tabel>& DB)
+	void IdentificareDisplayTable(vector<Tabel>& DB, int &nrDisplay)
 	{
 		string command = commandText;
+		char * aux;
 		int k = 0;
 		for (int i = 0; i < DB.size(); i++)
 			if (command.substr(14, command.length()) == DB[i].GetNume())
 			{
 				cout << DB[i];
+				nrDisplay++;
+				ofstream out("DisplayFile_" + to_string(nrDisplay)+".txt");
+				out << DB[i];
+				out.close();
 				k = 1;
+
 			}
 		if (k == 0) cout << "Nu exista tabele cu acest nume" << endl;
 	}
 	void IdentificareDropTable(vector<Tabel>& DB)
 	{
 		string command = commandText;
-		int l = 0;
+		string numeTabelEliminat;
+		string numeFisier;
+		numeTabelEliminat = command.substr(11, command.length());
 		for (int i = 0; i < DB.size(); i++)
-			if (command.substr(11, command.length()) == DB[i].GetNume())
+			if (numeTabelEliminat == DB[i].GetNume())
 			{
 				DB.erase(DB.begin() + i);
-				l = 1;
-				cout << "Tabelul " << DB[i].GetNume() << " a fost sters cu succes." << endl;
+				cout << "Tabelul " << numeTabelEliminat << " a fost sters cu succes." << endl;
+				numeFisier = numeTabelEliminat + ".cfg";
+				remove(numeFisier.c_str());
+				numeFisier = numeTabelEliminat + ".dat";
+				remove(numeFisier.c_str());
+				return;
 			}
-		if (l == 0) cout << "Nu exista tabele cu acest nume" << endl;
+		cout << "Nu exista tabele cu acest nume" << endl;
 	}
 	void IdentificareCreateTable(vector<Tabel>& DB)
 	{
@@ -83,8 +98,12 @@ public:
 		}
 
 		command.erase(0, 2);
-
-
+		for (int i = 0; i < DB.size(); i++)
+			if (DB[i].GetNume() == nume)
+			{
+				cout << "Tabela exista deja - nu se poate face create!" << endl;
+				return;
+			}
 
 		while (command.empty() == false)
 		{
@@ -216,11 +235,17 @@ public:
 		}
 		Tabel temp(nume, si, vi, sf, vf, ss, vs, ordineColoane);
 		DB.push_back(temp);
+		ofstream out(nume + ".cfg");
+		out << commandText.substr(13, commandText.length() - 13);
+		out.close();
+		ofstream dout(nume + ".dat");
+		dout.close();
 	}
 	void IdentificareInsertInto(vector<Tabel>& DB)
 	{
 		string command = commandText;
 		string numetabel = "";
+		string linie;
 		int indice = -1;
 		command.erase(0, 12);
 		for (int i = 0; i < command.length(); i++)
@@ -239,13 +264,13 @@ public:
 			cout << "Tabela nu exista - nu se poate face insert!" << endl;
 
 		command.erase(0, 8);
-
+		linie = command;
 		string element = "";
 		int nrElemCrt = -1;
 
 		string p_tip;
 		int p_pozitie;
-
+		
 		while (command.empty() == false)
 		{
 			for (int i = 0; i < command.length(); i++)
@@ -280,8 +305,10 @@ public:
 				DB[indice].vs[p_pozitie].AddElement(element);
 			}
 		}
-		
-
+		ofstream out(numetabel + ".dat", ios::app);
+		out << linie;
+		out.close();
+	
 	}
 	void IdentificareUpdate(vector<Tabel>& DB)
 	{
@@ -506,10 +533,12 @@ public:
 				}
 			}
 			DB[indicetabel].vs[indicecolUpdate].setVector(x, DB[indicetabel].vs[indicecolUpdate].getVectorSize());
+			DB[indicetabel].IncarcaDate();
 		}
+
 	}
 
-	void IdentificareSelectAllFrom(vector<Tabel>& DB)
+	void IdentificareSelectAllFrom(vector<Tabel>& DB, int &nrSelect)
 	{
 		string command = commandText;
 		string numetabel = "";
@@ -629,8 +658,13 @@ public:
 					pozitii.push_back(i);
 		}
 		
+
 		//cap de tabel
+		nrSelect++;
+		ofstream out("SelectFile_" + to_string(nrSelect)+".txt");
+
 		cout << numetabel << endl;
+		out << numetabel << endl;
 		for (int i = 0; i < DB[indicetabel].ordineColoane.size(); i++)
 		{
 			string p_tip = DB[indicetabel].ordineColoane[i].first;
@@ -683,7 +717,7 @@ public:
 		}
 
 	}
-	void IdentificareSelect(vector<Tabel>& DB)
+	void IdentificareSelect(vector<Tabel>& DB, int &nrSelect)
 	{
 
 		string command = commandText;
@@ -826,15 +860,22 @@ public:
 				for (int i = 0; i < nrInregistrari; i++)
 					pozitii.push_back(i);
 		}
-
+	
+		
 		//cap de tabel
+		nrSelect++;
+		ofstream out("SelectFile_" + to_string(nrSelect)+".txt");
+
 		cout << numetabel << endl;
+		out << numetabel << endl;
 		for (int i = 0; i < coloanedisplay.size(); i++)
 		{
 				cout << coloanedisplay[i] << " ";
+				out << coloanedisplay[i] << " ";
 		}
 
 		cout << endl;
+		out << endl;
 		//datele
 
 		for (int ic = 0; ic < coloanedisplay.size(); ic++)
@@ -880,6 +921,7 @@ public:
 		for (int ipoz = 0; ipoz < pozitii.size(); ipoz++)
 		{
 			cout << "Inregistrarea [" << pozitii[ipoz] << "]: ";
+			out << "Inregistrarea [" << pozitii[ipoz] << "]: ";
 			for (int i = 0; i < ordineColoaneDiplay.size(); i++)
 			{
 				string p_tip = ordineColoaneDiplay[i].first;
@@ -889,24 +931,26 @@ public:
 				{
 					int* t = DB[indicetabel].vi[p_pozitie].getVector();
 					cout << "[" << t[pozitii[ipoz]] << "] ";
+					out << "[" << t[pozitii[ipoz]] << "] ";
 				}
 
 				if (p_tip == "float")
 				{
 					float* t = DB[indicetabel].vf[p_pozitie].getVector();
 					cout << "[" << t[pozitii[ipoz]] << "] ";
+					out << "[" << t[pozitii[ipoz]] << "] ";
 				}
 				if (p_tip == "string")
 				{
 					vector<string> t = DB[indicetabel].vs[p_pozitie].getVector();
 					cout << "[" << t[pozitii[ipoz]] << "] ";
+					out << "[" << t[pozitii[ipoz]] << "] ";
 				}
 			}
 			cout << endl;
+			out << endl;
 		}
-
-
-		
+		out.close();	
 
 	}
 	void IdentificareDeleteFrom(vector<Tabel>& DB)
@@ -1016,14 +1060,14 @@ public:
 
 
 	}
-	void Identificare_comanda(vector<Tabel>& DB)
+	void Identificare_comanda(vector<Tabel>& DB, int &nrDisplay, int &nrSelect)
 	{
 
 
 		string command = commandText;
 		if (command.substr(0, 13) == "DISPLAY TABLE")
 		{
-			IdentificareDisplayTable(DB);
+			IdentificareDisplayTable(DB,nrDisplay);
 		}
 
 		if (command.substr(0, 10) == "DROP TABLE")
@@ -1040,8 +1084,6 @@ public:
 		}
 
 
-
-
 		if (command.substr(0, 12) == "INSERT INTO ")
 		{
 
@@ -1054,12 +1096,12 @@ public:
 		}
 		if (command.substr(0, 16) == "SELECT ALL FROM ")
 		{
-			IdentificareSelectAllFrom(DB);
+			IdentificareSelectAllFrom(DB,nrSelect);
 		}
 		else
 			if (command.substr(0, 7) == "SELECT ")
 			{
-				IdentificareSelect(DB);
+				IdentificareSelect(DB,nrSelect);
 
 			}
 
@@ -1070,3 +1112,4 @@ public:
 		}
 	}
 };
+

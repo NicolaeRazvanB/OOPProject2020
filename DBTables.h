@@ -773,6 +773,76 @@ public:
 		}
 	}
 
+	void IncarcaStructura(string numeFisier)
+	{
+		string linie;
+		ifstream in(numeFisier);
+		in >> *this;
+		in.close();
+		ofstream out(GetNume() + ".dat");
+		out.close();
+	}
+
+	void IncarcaDate()
+	{
+		string linie;
+		ifstream in(GetNume()+".dat");
+		in >> ws;
+		while (getline(in, linie))
+		{
+			AddLinie(linie);
+			in >> ws;
+		}
+		in.close();
+	}
+
+	void AddLinie(string command)
+	{
+		int indice = -1;
+		string element = "";
+		int nrElemCrt = -1;
+
+		string p_tip;
+		int p_pozitie;
+		command.erase(0,1);
+
+		while (command.empty() == false)
+		{
+			for (int i = 0; i < command.length(); i++)
+			{
+				if (command[i] == ',' || command[i] == ')')
+				{
+					element = (command.substr(0, i));
+					nrElemCrt++;
+					command.erase(0, i);
+					i = command.length() + 1;
+				}
+			}
+			if (command[0] == ',')
+				command.erase(0, 2);
+			else
+				command.erase(0, 1);
+
+			p_tip = this->ordineColoane[nrElemCrt].first;
+			int p_pozitie = this->ordineColoane[nrElemCrt].second;
+
+			if (p_tip == "int")
+			{
+				this->vi[p_pozitie].AddElement(stoi(element));
+			}
+
+			if (p_tip == "float")
+			{
+				this->vf[p_pozitie].AddElement(stof(element));
+			}
+			if (p_tip == "string")
+			{
+				this->vs[p_pozitie].AddElement(element);
+			}
+		}
+	}
+
+	
 	int getSI()
 	{
 		return si;
@@ -785,7 +855,6 @@ public:
 	{
 		return ss;
 	}
-
 
 	friend ostream& operator<<(ostream&, Tabel);
 	friend istream& operator>>(istream&, Tabel&);
@@ -872,69 +941,179 @@ ostream& operator<<(ostream& out, Tabel c)
 }
 istream& operator>>(istream& in, Tabel& c)
 {
-	cout << "Nume Tabel: ";
-	in >> ws;
-	getline(in, c.nume);
-	cout << "Nr. Col. Tip int: ";
-	in >> c.si;
-	if (c.vi.empty() == false)
+	string command;
+
+	struct col
 	{
-		c.vi.clear();
-	}
-	if (c.si > 0)
+		string name;
+		int dimensiune;
+		int bazaint;
+		float bazafloat;
+		string bazastring;
+		string tip;
+	};
+	col alfa;
+	alfa.name = "";
+	alfa.dimensiune = 0;
+	alfa.bazaint = 0;
+	alfa.bazafloat = 0;
+	alfa.tip = "";
+	alfa.bazastring = "";
+
+	string nume = "";
+	int si = 0;
+	int sf = 0;
+	int ss = 0;
+	vector<Coloana_int> vi;
+	vector<Coloana_float>vf;
+	vector<Coloana_string>vs;
+	vector<string> vsAux;
+	vector<pair<string, int>> ordineColoane;
+	pair<string, int> valOrdineColoane;
+
+	getline(in, command);
+	for (int i = 0; i < command.length(); i++)
 	{
-		c.vi.resize(c.si);
-		for (int i = 0; i < c.si; i++)
+		if (command[i] == '(')
 		{
-			cout << "Inregistrarea [" << i << "]:";
-			in >> c.vi[i];
+			nume = (command.substr(0, i - 1));
+			command.erase(0, i - 1);
+			i = command.length() + 1;
 		}
 	}
-	else
+
+	command.erase(0, 2);
+
+	while (command.empty() == false)
 	{
-		c.si = 0;
-		c.vi.clear();
-	}
-	cout << "Nr. Col. Tip Float: ";
-	in >> c.sf;
-	if (c.vf.empty() == false)
-	{
-		c.vf.clear();
-	}
-	if (c.sf > 0)
-	{
-		c.vf.resize(c.sf);
-		for (int i = 0; i < c.sf; i++)
+		for (int i = 0; i < command.length(); i++)
 		{
-			cout << "Inregistrarea [" << i << "]:";
-			in >> c.vf[i];
+			if (command[i] == ',')
+			{
+				command.erase(0, 1);
+				alfa.name = (command.substr(0, i - 1));
+				command.erase(0, i + 1);
+				i = command.length() + 1;
+			}
 		}
-	}
-	else
-	{
-		c.sf = 0;
-		c.vf.clear();
-	}
-	cout << "Nr. Col. Tip String: ";
-	in >> c.ss;
-	if (c.vs.empty() == false)
-	{
-		c.vs.clear();
-	}
-	if (c.ss > 0)
-	{
-		c.vs.resize(c.ss);
-		for (int i = 0; i < c.ss; i++)
+
+		for (int i = 0; i < command.length(); i++)
 		{
-			cout << "Inregistrarea [" << i << "]:";
-			in >> c.vs[i];
+			if (command[i] == ',')
+			{
+				if (command.substr(0, i) == "int")
+
+				{
+					alfa.tip = (command.substr(0, i));
+					command.erase(0, i + 2);
+					i = command.length() + 1;
+				}
+				else if (command.substr(0, i) == "float")
+
+				{
+					alfa.tip = (command.substr(0, i));
+					command.erase(0, i + 2);
+					i = command.length() + 1;
+				}
+				else if (command.substr(0, i) == "string")
+
+				{
+					alfa.tip = (command.substr(0, i));
+					command.erase(0, i + 2);
+					i = command.length() + 1;
+				}
+
+			}
 		}
+
+		for (int i = 0; i < command.length(); i++)
+		{
+			if (command[i] == ',')
+			{
+				if (alfa.tip == "int")
+				{
+					alfa.dimensiune = stoi(command.substr(0, i));
+					command.erase(0, i + 2);
+					i = command.length() + 1;
+				}
+				else if (alfa.tip == "float")
+				{
+					alfa.dimensiune = stoi(command.substr(0, i));
+					command.erase(0, i + 2);
+					i = command.length() + 1;
+				}
+				else
+					if (alfa.tip == "string")
+					{
+						alfa.dimensiune = stoi(command.substr(0, i));
+						command.erase(0, i + 2);
+						i = command.length() + 1;
+					}
+			}
+		}
+
+		for (int i = 0; i < command.length(); i++)
+		{
+
+			if (command[i] == ')')
+			{
+				if (alfa.tip == "int")
+					alfa.bazaint = stoi(command.substr(0, i));
+				else
+					if (alfa.tip == "float")
+						alfa.bazafloat = stof(command.substr(0, i));
+					else
+						if (alfa.tip == "string")
+							alfa.bazastring = command.substr(0, i);
+				command.erase(0, i);
+				if (command[1] == ')')
+					command.clear();
+				else
+					command.erase(0, 3);
+				i = command.length() + 1;
+			}
+		}
+
+		if (alfa.tip == "int")
+		{
+			si++;
+			Coloana_int CI(alfa.name, alfa.dimensiune, alfa.bazaint, 0, nullptr);
+			vi.push_back(CI);
+			valOrdineColoane.first = "int";
+			valOrdineColoane.second = si - 1;
+			ordineColoane.push_back(valOrdineColoane);
+
+		}
+		if (alfa.tip == "float")
+		{
+			sf++;
+			Coloana_float CF(alfa.name, alfa.dimensiune, alfa.bazafloat, 0, nullptr);
+			vf.push_back(CF);
+			valOrdineColoane.first = "float";
+			valOrdineColoane.second = sf - 1;
+			ordineColoane.push_back(valOrdineColoane);
+
+		}
+
+		if (alfa.tip == "string")
+		{
+			ss++;
+			Coloana_string CS(alfa.name, alfa.dimensiune, alfa.bazastring, 0, vsAux);
+			vs.push_back(CS);
+			valOrdineColoane.first = "string";
+			valOrdineColoane.second = ss - 1;
+			ordineColoane.push_back(valOrdineColoane);
+		}
+
+		alfa.name = "";
+		alfa.tip = "";
+		alfa.dimensiune = 0;
+		alfa.bazaint = 0;
+		alfa.bazafloat = 0;
+		alfa.bazastring = "";
 	}
-	else
-	{
-		c.ss = 0;
-		c.vs.clear();
-	}
+	Tabel temp(nume, si, vi, sf, vf, ss, vs, ordineColoane);
+	c = temp;
 	return in;
 }
 

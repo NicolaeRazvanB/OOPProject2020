@@ -1,0 +1,6 @@
+SELECT ALL FROM tabelAngajati
+DROP TABLE tabelAngajati
+SELECT ALL FROM tabelAngajati
+SELECT ALL FROM tabelDepartamente
+DELETE FROM tabelDepartamente WHERE cladire = 1
+SELECT ALL FROM tabelDepartamente

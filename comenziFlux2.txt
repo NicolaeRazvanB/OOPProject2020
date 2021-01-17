@@ -1,0 +1,11 @@
+CREATE TABLE tabelDepartamente ((denumire, string, 20, -), (cladire, int, 3, 1), (etaj, int, 3, 0))
+INSERT INTO tabelDepartamente VALUES(resurse umane, 1, 1)
+INSERT INTO tabelDepartamente VALUES(management, 1, 1)
+INSERT INTO tabelDepartamente VALUES(productie volane, 2, 2)
+INSERT INTO tabelDepartamente VALUES(productie roti, 2, 1)
+SELECT ALL FROM tabelDepartamente
+SELECT ALL FROM tabelDepartamente WHERE cladire = 2
+SELECT (denumire, etaj) FROM tabelDepartamente WHERE cladire = 1
+SELECT (cladire, etaj) FROM tabelDepartamente
+UPDATE tabelDepartamente SET etajul = 100 WHERE cladire = 1
+SELECT ALL FROM tabelDepartamente

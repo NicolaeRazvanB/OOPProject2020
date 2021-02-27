@@ -8,18 +8,16 @@ using namespace std;
 
 
 
-void Initializare(vector<Tabel>& DB, char *argv, int &nrDisplay, int &nrSelect)
+void Initializare(vector<Tabel>& DB, int argc, char **argv, int &nrDisplay, int &nrSelect)
 {
-	char* numeFisier, * urmFisier;
-	char separator[] = " ";
 	
 	string cmd;
 	Command command;
-	cout << "Initializare pe baza comenzilor din fisierele "<<argv << endl;
-	numeFisier = strtok_s(argv, separator, &urmFisier);
-	while (numeFisier != nullptr)
+	cout << "Initializare pe baza comenzilor din fisierele transmise"<< endl;
+	for(int i=1;i<argc;i++)
 	{
-		ifstream in(numeFisier);
+		
+		ifstream in(argv[i]);
 
 		while (getline(in, cmd))
 		{
@@ -32,7 +30,6 @@ void Initializare(vector<Tabel>& DB, char *argv, int &nrDisplay, int &nrSelect)
 
 		}
 		in.close();
-		numeFisier = strtok_s(nullptr, separator, &urmFisier);
 	}
 	cout << "S-a incheiat initializarea pe baza comenzilor din fisiere" << endl;
 	cout << "-------------------------------------------------------------" << endl;
@@ -90,15 +87,15 @@ void Meniu(vector<Tabel> &DB, int& nrDisplay, int& nrSelect)
 	} while (optiune != 0);
 }
 
-int main(int argc, char *argv)
+int main(int argc, char **argv)
 {
-	
+//	char argv[100] = "comenziFlux2.txt ComenziFlux1.txt comenziFlux3.txt";
 	vector<Tabel> DB;
 
 	int nrSelect = 0;
 	int nrDisplay = 0;
 	
-	Initializare(DB, argv, nrDisplay, nrSelect);
+	Initializare(DB, argc, argv, nrDisplay, nrSelect);
 	Meniu(DB, nrDisplay, nrSelect);
 }
 
